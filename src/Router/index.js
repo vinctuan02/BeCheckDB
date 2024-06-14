@@ -8,6 +8,7 @@ let initWebRouter = (app) => {
 
 
     router.get('/', (req, res) => {
+        // console.log("call api")
         res.send("Call Api oke")
     })
     router.get('/hello-world', (req, res) => {

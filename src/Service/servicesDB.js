@@ -60,10 +60,17 @@ let getAllNameDB = () => {
             // console.log("get all name db")
             const connection = await mysql.createConnection(dbConfig);
             const [allNameDB] = await connection.execute('SHOW DATABASES');
+            // console.log("allNameDB: ", allNameDB)
+
+            const filteredDatabases = allNameDB
+                .filter(row => !['information_schema', 'my_database', 'mysql', 'performance_schema'].includes(row.Database))
+                .map(row => ({ Database: row.Database }));
+
+            // console.log(filteredDatabases)
             resolve({
                 status: 'Ok',
                 message: 'Get All Name DB Success',
-                data: allNameDB
+                data: filteredDatabases
             })
         } catch (e) {
             reject(e)
@@ -130,9 +137,15 @@ let getInforATable = (data) => {
             }
 
             if (nameDB && nameTable && !isASC && !limit) {
+                // console.log("true")
                 const connection = await mysql.createConnection(dbConfig);
+                // console.log(connection)
                 const [dataTable] = await connection.execute(`SELECT * FROM ${nameDB}.${nameTable}`);
+                // console.log(dataTable)
+
                 const [describeTable] = await connection.execute(`DESCRIBE ${nameDB}.${nameTable}`);
+
+                // console.log(describeTable)
 
                 resolve({
                     status: 'Ok',
@@ -143,6 +156,7 @@ let getInforATable = (data) => {
                     }
                 })
             }
+
         } catch (e) {
             reject(e)
         }

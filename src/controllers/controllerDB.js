@@ -62,6 +62,7 @@ const getATable = (async (req, res) => {
 const getInforATable = (async (req, res) => {
     try {
         const { nameDB, nameTable } = req.body
+        // console.log("req.body: ", req.body)
         if (!nameDB || !nameTable) {
             return res.status(400).json({
                 status: 'ERR',
@@ -69,7 +70,6 @@ const getInforATable = (async (req, res) => {
             })
         }
         let response = await serviceDB.getInforATable(req.body)
-        // console.log("req.body: ", req.body)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({

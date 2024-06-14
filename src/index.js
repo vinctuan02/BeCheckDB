@@ -10,7 +10,7 @@ let app = express()
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://10.10.12.15:3000', // 
+    origin: 'http://localhost:3000', // 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
