@@ -1,15 +1,8 @@
 import { serviceDB } from "../Service/servicesDB"
 
-const compareTable = (async (req, res) => {
-    let response = await serviceDB.compareTable(req.body)
-    // console.log("req.body: ", req.body)
-    return res.status(200).json(response)
-})
-
 const getAllNameDB = (async (req, res) => {
     try {
         let response = await serviceDB.getAllNameDB()
-        // console.log("req.body: ", req.body)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -19,18 +12,16 @@ const getAllNameDB = (async (req, res) => {
 
 })
 
-const getAllNameTableOfDB = (async (req, res) => {
-    // console.log("get table of db")
+const getAllNameTBOfDB = (async (req, res) => {
     try {
-        const { nameDB } = req.body
+        const { nameDB } = req.query
         if (!nameDB) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getAllNameTableOfDB(req.body)
-        // console.log("req.body: ", req.body)
+        let response = await serviceDB.getAllNameTBOfDB(req.query)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -40,17 +31,16 @@ const getAllNameTableOfDB = (async (req, res) => {
 
 })
 
-const getATable = (async (req, res) => {
+const getDataTB = (async (req, res) => {
     try {
-        const { nameDB, nameTable } = req.body
-        if (!nameDB || !nameTable) {
+        const { nameDB, nameTB } = req.query
+        if (!nameDB || !nameTB) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getATable(req.body)
-        // console.log("req.body: ", req.body)
+        let response = await serviceDB.getDataTB(req.query)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -59,17 +49,35 @@ const getATable = (async (req, res) => {
     }
 })
 
-const getInforATable = (async (req, res) => {
+const getDescribeTB = (async (req, res) => {
     try {
-        const { nameDB, nameTable } = req.body
-        // console.log("req.body: ", req.body)
-        if (!nameDB || !nameTable) {
+        const { nameDB, nameTB } = req.query
+        if (!nameDB || !nameTB) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getInforATable(req.body)
+        let response = await serviceDB.getDescribeTB(req.query)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const getColumnsINT = (async (req, res) => {
+    try {
+        const { nameDB, nameTB } = req.query
+        // console.log("req.query: ", req.query)
+        if (!nameDB || !nameTB) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'The input is required'
+            })
+        }
+        let response = await serviceDB.getColumnsINT(req.query)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -79,11 +87,9 @@ const getInforATable = (async (req, res) => {
 })
 
 export const controllerDB = {
-    // getATable,
-    compareTable,
-
     getAllNameDB,
-    getAllNameTableOfDB,
-    getATable,
-    getInforATable
+    getAllNameTBOfDB,
+    getDataTB,
+    getDescribeTB,
+    getColumnsINT
 }

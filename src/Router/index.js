@@ -15,12 +15,11 @@ let initWebRouter = (app) => {
         res.send("hello world")
     })
 
-    router.post('/compare-table', controllerDB.compareTable)
-
     router.get('/get-all-name-db', controllerDB.getAllNameDB)
-    router.post('/get-all-name-table-of-db', controllerDB.getAllNameTableOfDB)
-    router.post('/get-a-table', controllerDB.getATable)
-    router.post('/get-infor-a-table', controllerDB.getInforATable)
+    router.get('/get-all-name-tb-of-db', controllerDB.getAllNameTBOfDB)
+    router.get('/get-data-tb', controllerDB.getDataTB)
+    router.get('/get-describe-tb', controllerDB.getDescribeTB)
+    router.get('/get-columns-int-tb', controllerDB.getColumnsINT)
 
     return app.use('/', router)
 }
