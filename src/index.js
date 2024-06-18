@@ -31,5 +31,5 @@ initWebRouter(app)
 connectDB()
 
 app.listen(3001, () => {
-    console.log("Backend nodejs is running", 3001)
+    console.log("Backend nodejs is running s", 3001)
 })
