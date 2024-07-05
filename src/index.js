@@ -2,7 +2,6 @@ import express from "express"
 import cors from 'cors'
 import initWebRouter from './Router/index'
 import { connectDB } from "./DB/connectDB"
-import mysql from 'mysql2/promise';
 
 // require('dotenv').config()
 
@@ -10,7 +9,7 @@ let app = express()
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:3000', // 
+    origin: 'http://10.10.12.15:3001', // 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204

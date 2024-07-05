@@ -161,10 +161,49 @@ let getColumnsINT = (data) => {
     })
 }
 
+let getCountRecords = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { nameDB, nameTB } = data
+
+            if (nameDB && nameTB) {
+                const connection = await mysql.createConnection(dbConfig);
+                let sql = `SELECT COUNT(*) AS countRecords FROM ${nameDB}.${nameTB}`
+                const [countRecords] = await connection.execute(sql);
+
+                connection.end(err => {
+                    if (err) {
+                        console.error('Error closing the connection:', err);
+                        return;
+                    }
+                    console.log('Connection closed successfully.');
+                });
+
+                resolve({
+                    code: 0,
+                    status: 'Ok',
+                    message: 'Get countRecords Table Success',
+                    data: countRecords
+                })
+            }
+
+            resolve({
+                code: -1,
+                status: 'Ok',
+                message: '',
+            })
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 export const serviceDB = {
     getAllNameDB,
     getAllNameTBOfDB,
     getDataTB,
     getDescribeTB,
-    getColumnsINT
+    getColumnsINT,
+    getCountRecords
 }
