@@ -1,7 +1,7 @@
 import DataTypes from 'sequelize'
 import { sequelize } from '../config/Database'
 
-const Reports = sequelize.define('Reports', {
+const Report = sequelize.define('Report', {
     report_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -24,4 +24,4 @@ const Reports = sequelize.define('Reports', {
     timestamps: false // Không sử dụng timestamps (createdAt, updatedAt)
 });
 
-export default Reports;
+export default Report;

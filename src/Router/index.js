@@ -31,6 +31,16 @@ let initWebRouter = (app) => {
     router.put('/report/update-report/:report_id', controllerReport.updateReport)
     router.delete('/report/delete-report/:report_id', controllerReport.deleteReport)
 
+    //router report details
+    router.get('/report-details/get-details', controllerReport.getReportDetails)
+    // router.get('/report-details/get-details-by-id/:detail_id', controllerReport.getAReportDetails)
+    router.get('/report-details/get-details-by-report_id/:report_id', controllerReport.getDetailBy_report_id)
+    // router.get('/report-details/get-details-by-report-name/', controllerReport.getReportByReportName)
+    router.post('/report-details/create-details', controllerReport.createReportDetails)
+    router.post('/report-details/bulk-create-details', controllerReport.bulkCreateReportDetails)
+    // router.put('/report-details/update-report-detail/:detail_id', controllerReport.updateReportDetails)
+    // router.delete('/report-details/delete-report/:report_id', controllerReport.deleteReportDetails)
+
 
     return app.use('/', router)
 }

@@ -1,4 +1,4 @@
-import { serviceDB } from "../service/servicesDB"
+import { serviceDB } from "../Service/servicesDB"
 
 const getAllNameDB = (async (req, res) => {
     try {

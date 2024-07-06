@@ -9,11 +9,7 @@ let app = express()
 app.use(express.json());
 
 app.use(cors({
-<<<<<<< HEAD
     origin: 'http://10.10.12.15:3000', // 
-=======
-    origin: 'http://10.10.12.15:3001', // 
->>>>>>> dc07887368d43efe3998690b6b624eb855bfd649
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204

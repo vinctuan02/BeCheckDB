@@ -1,8 +1,10 @@
-import { serviceReport } from "../service/serviceReport"
+import { serviceReport } from "../Service/serviceReport"
 
 const getReports = (async (req, res) => {
     try {
-        let response = await serviceReport.getReports()
+        let { keySearch = '' } = req.query
+        const input = { keySearch }
+        let response = await serviceReport.getReports(input)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -105,11 +107,141 @@ const deleteReport = (async (req, res) => {
 })
 
 
+const getReportDetails = (async (req, res) => {
+    try {
+        // let { keySearch = '' } = req.query
+        // const input = { keySearch }
+        let response = await serviceReport.getReportDetails()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+
+const getDetailBy_report_id = (async (req, res) => {
+    try {
+        const { report_id } = req.params
+        // console.log(+report_id);
+        if (!report_id) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+        let response = await serviceReport.getDetailBy_report_id(+report_id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+
+// const getReportByReportName = (async (req, res) => {
+//     try {
+//         const { reportName } = req.params
+//         if (!reportName) {
+//             return res.status(200).json({
+//                 message: "Missing input"
+//             })
+//         }
+//         let response = await serviceReport.getReportByReportName(reportName)
+//         return res.status(200).json(response)
+//     } catch (error) {
+//         return res.status(404).json({
+//             message: error
+//         })
+//     }
+// })
+
+const createReportDetails = (async (req, res) => {
+    try {
+        const { report_id, schemaName, dataSourceName, dataSinkName } = req.body
+        if (!report_id || !schemaName || !dataSourceName || !dataSinkName) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+
+        const reportDetails = { report_id, schemaName, dataSourceName, dataSinkName }
+
+        let response = await serviceReport.createReportDetails(reportDetails)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const updateReportDetails = (async (req, res) => {
+    try {
+        const { report_id } = req.params
+        const { reportName, fileName, status } = req.body
+        if (!reportName || !fileName || !status) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+
+        const report = { report_id: +report_id, reportName, fileName, status }
+        let response = await serviceReport.updateReport(report)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const deleteReportDetails = (async (req, res) => {
+    try {
+        const { report_id } = req.params
+        if (!report_id) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+        let response = await serviceReport.deleteReport(+report_id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const bulkCreateReportDetails = (async (req, res) => {
+    try {
+        const arrayReportDetails = req.body
+        if (!arrayReportDetails) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+
+        let response = await serviceReport.bulkCreateReportDetails(arrayReportDetails)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
 export const controllerReport = {
     getReports,
     getReport,
     getReportByReportName,
     createReport,
     updateReport,
-    deleteReport
+    deleteReport,
+
+    getReportDetails,
+    createReportDetails,
+    getDetailBy_report_id,
+    bulkCreateReportDetails
 }
