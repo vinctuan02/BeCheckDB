@@ -8,12 +8,23 @@ import { connectDB } from "./DB/connectDB"
 let app = express()
 app.use(express.json());
 
-app.use(cors({
-    origin: 'http://10.10.12.15:3000', // 
+const allowedOrigins = ['http://10.10.12.15:3000', 'http://10.10.12.15:3001'];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
-}));
+};
+
+
+app.use(cors(corsOptions));
 
 // Middleware để bắt lỗi CORS
 app.use((err, req, res, next) => {

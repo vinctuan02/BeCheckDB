@@ -1,9 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const dbConfig = {
-    host: '10.10.12.93',
-    user: 'vinc02',
-    password: '12345',
+    host: '10.10.11.149',
+    user: 'vinc',
+    password: 'oracle_4U',
+    timezone: 'Asia/Ho_Chi_Minh'
 };
 
 let getAllNameDB = () => {
@@ -66,7 +67,7 @@ let getAllNameTBOfDB = (data) => {
 let getDataTB = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let { nameDB, nameTB, isASC = 'true', limit = 5 } = data
+            let { nameDB, nameTB, isASC = 'true', limit = 100 } = data
 
             if (nameDB && nameTB && limit) {
                 const connection = await mysql.createConnection(dbConfig);
@@ -199,11 +200,89 @@ let getCountRecords = (data) => {
     })
 }
 
+let getTable = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { nameDB, nameTB, fieldName, fieldValue, isASC = true, limit = 100, startValue, endValue } = data
+
+            if (nameDB && nameTB) {
+                const connection = await mysql.createConnection(dbConfig);
+
+                let sql = ``
+                if (fieldName && fieldValue) {
+                    sql = `
+                            SELECT *
+                            FROM ${nameDB}.${nameTB}
+                            WHERE ${fieldName} = '${fieldValue}'
+                            ORDER BY id ${isASC === 'true' ? 'ASC' : 'DESC'} LIMIT ${limit}
+                        `
+                } else if (fieldName && startValue && endValue) {
+                    sql = `
+                        SELECT *
+                        FROM ${nameDB}.${nameTB}
+                        WHERE ${fieldName} BETWEEN '${startValue}' AND '${endValue}'
+                        ORDER BY id ${isASC === 'true' ? 'ASC' : 'DESC'} LIMIT ${limit}
+                    `
+                    // console.log(sql);
+
+                } else {
+                    sql = `
+                        SELECT * FROM ${nameDB}.${nameTB} 
+                        ORDER BY id ${isASC === 'true' ? 'ASC' : 'DESC'} LIMIT ${limit}
+                    `
+                }
+
+
+                try {
+
+                    console.log(sql);
+                    const [table] = await connection.execute(sql);
+
+                    connection.end(err => {
+                        if (err) {
+                            console.error('Error closing the connection:', err);
+                            return;
+                        }
+                        console.log('Connection closed successfully.');
+                    });
+
+                    resolve({
+                        code: 0,
+                        status: 'Ok',
+                        message: 'Get Table Success',
+                        data: table
+                    })
+                } catch (error) {
+                    // Xử lý lỗi khi truy vấn thất bại
+                    console.error('Error executing SQL query:', error.message);
+                    resolve({
+                        code: 0,
+                        status: 'fail',
+                        message: error.message,
+                    })
+                }
+            }
+
+            resolve({
+                code: -1,
+                status: 'Ok',
+                message: '',
+            })
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
 export const serviceDB = {
     getAllNameDB,
     getAllNameTBOfDB,
     getDataTB,
     getDescribeTB,
     getColumnsINT,
-    getCountRecords
+    getCountRecords,
+
+    getTable
 }

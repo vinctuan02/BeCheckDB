@@ -32,7 +32,7 @@ const getAllNameTBOfDB = (async (req, res) => {
 const getDataTB = (async (req, res) => {
     try {
         const { nameDB, nameTB } = req.query
-        console.log("req.query: ", req.query)
+        // console.log("req.query: ", req.query)
         if (!nameDB || !nameTB) {
             return res.status(400).json({
                 status: 'ERR',
@@ -69,7 +69,7 @@ const getDescribeTB = (async (req, res) => {
 const getColumnsINT = (async (req, res) => {
     try {
         const { nameDB, nameTB } = req.query
-        console.log("req.query: ", req.query)
+        // console.log("req.query: ", req.query)
         if (!nameDB || !nameTB) {
             return res.status(400).json({
                 status: 'ERR',
@@ -104,11 +104,35 @@ const getCountRecords = (async (req, res) => {
     }
 })
 
+const getTable = (async (req, res) => {
+    try {
+        const { nameDB, nameTB } = req.query
+        // console.log(req.query);
+        if (!nameDB || !nameTB) {
+            return res.status(400).json({
+                code: -1,
+                status: 'ERR',
+                message: 'The input is required'
+            })
+        }
+        let response = await serviceDB.getTable(req.query)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+
 export const controllerDB = {
     getAllNameDB,
     getAllNameTBOfDB,
     getDataTB,
     getDescribeTB,
     getColumnsINT,
-    getCountRecords
+    getCountRecords,
+
+
+    getTable
 }

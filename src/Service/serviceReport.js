@@ -163,7 +163,7 @@ let deleteReport = (report_id) => {
                 where: { report_id }
             });
 
-            console.log(reportById);
+            // console.log(reportById);
 
             if (!reportById) {
                 resolve({

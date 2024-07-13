@@ -6,7 +6,7 @@ const sequelize = new Sequelize('ETL_TOOL_VALIDATE', 'vinc02', '12345', {
 });
 
 export let connectDB = async () => {
-    console.log("hhi")
+    // console.log("hhi")
     try {
         await sequelize.authenticate();
         console.log("Connection has been established successfully. ");

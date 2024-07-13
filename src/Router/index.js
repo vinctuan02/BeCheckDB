@@ -41,6 +41,8 @@ let initWebRouter = (app) => {
     // router.put('/report-details/update-report-detail/:detail_id', controllerReport.updateReportDetails)
     // router.delete('/report-details/delete-report/:report_id', controllerReport.deleteReportDetails)
 
+    // data
+    router.get('/get-table', controllerDB.getTable)
 
     return app.use('/', router)
 }
