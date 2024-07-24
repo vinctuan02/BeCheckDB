@@ -43,6 +43,15 @@ let initWebRouter = (app) => {
 
     // data
     router.get('/get-table', controllerDB.getTable)
+    router.get('/group-by-column', controllerDB.groupByColumn)
+
+    // auto compare
+    router.get('/auto-compare-table', controllerDB.autoCompareTable)
+
+    router.get('/test-connection', controllerDB.testConnection)
+    router.get('/create-connection', controllerDB.createConnection)
+
+    router.get('/count-record-tables', controllerDB.countRecordTablesSchema)
 
     return app.use('/', router)
 }

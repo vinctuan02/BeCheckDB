@@ -12,7 +12,11 @@ const ReportDetails = sequelize.define('ReportDetails', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    schemaName: {
+    schemaSourceName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    schemaSinkName: {
         type: DataTypes.STRING,
         allowNull: false,
     },
