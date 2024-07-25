@@ -41,6 +41,12 @@ let initWebRouter = (app) => {
     // router.put('/report-details/update-report-detail/:detail_id', controllerReport.updateReportDetails)
     // router.delete('/report-details/delete-report/:report_id', controllerReport.deleteReportDetails)
 
+
+    // jdbc
+    router.get('/jdbc/get-jdbcs-connections', controllerReport.getAllJDBCConnections)
+    router.post('/jdbc/create-jdbc-connections', controllerReport.createJDBCConnections)
+    router.post('/jdbc/bulk-create-jdbc-connections', controllerReport.bulkCreateJDBCConnections)
+
     // data
     router.get('/get-table', controllerDB.getTable)
     router.get('/group-by-column', controllerDB.groupByColumn)
@@ -48,6 +54,8 @@ let initWebRouter = (app) => {
     // auto compare
     router.get('/auto-compare-table', controllerDB.autoCompareTable)
 
+
+    //connection
     router.get('/test-connection', controllerDB.testConnection)
     router.get('/create-connection', controllerDB.createConnection)
 

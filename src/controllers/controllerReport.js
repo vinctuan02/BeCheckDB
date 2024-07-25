@@ -232,6 +232,62 @@ const bulkCreateReportDetails = (async (req, res) => {
     }
 })
 
+const getAllJDBCConnections = (async (req, res) => {
+    try {
+        // let { keySearch = '' } = req.query
+        // const input = { keySearch }
+        let response = await serviceReport.getAllJDBCConnections()
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+
+const createJDBCConnections = (async (req, res) => {
+    try {
+        const { host, username, password } = req.body
+        if (!host || !username || !password) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+
+        const infoJDBC_Connections = { host, username, password }
+
+        let response = await serviceReport.createJDBCConnections(infoJDBC_Connections)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            errCode: -1,
+            message: error.message
+        })
+    }
+})
+
+const bulkCreateJDBCConnections = (async (req, res) => {
+    try {
+        const arrInfoJDBC_Connections = req.body
+        if (!arrInfoJDBC_Connections || arrInfoJDBC_Connections.length <= 0) {
+            return res.status(200).json({
+                message: "Missing input"
+            })
+        }
+
+        let response = await serviceReport.bulkCreateJDBCConnections(arrInfoJDBC_Connections)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            errCode: -1,
+            message: error.message
+        })
+    }
+})
+
+
+
 export const controllerReport = {
     getReports,
     getReport,
@@ -243,5 +299,10 @@ export const controllerReport = {
     getReportDetails,
     createReportDetails,
     getDetailBy_report_id,
-    bulkCreateReportDetails
+    bulkCreateReportDetails,
+
+
+    getAllJDBCConnections,
+    createJDBCConnections,
+    bulkCreateJDBCConnections
 }

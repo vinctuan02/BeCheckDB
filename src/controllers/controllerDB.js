@@ -3,11 +3,11 @@ import mysql from 'mysql2/promise';
 
 const testConnection = async (req, res) => {
     try {
-        const { host, user, password } = req.query;
-        if (host && user && password) {
+        const { host, username, password } = req.query;
+        if (host && username && password) {
             const config = {
                 host: host,
-                user: user,
+                user: username,
                 password: password
             };
 
@@ -47,8 +47,8 @@ const testConnection = async (req, res) => {
 
 const createConnection = async (req, res) => {
     try {
-        const { host, user, password } = req.query;
-        if (!host || !user || !password) {
+        const { host, username, password } = req.query;
+        if (!host || !username || !password) {
             return res.status(200).json({
                 errCode: -1,
                 message: 'Missing input'
@@ -57,7 +57,7 @@ const createConnection = async (req, res) => {
 
         const configDB = {
             host: host,
-            user: user,
+            user: username,
             password: password
         };
 

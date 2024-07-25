@@ -1,6 +1,7 @@
 import { Op } from 'sequelize'
 import Report from '../models/Report';
 import ReportDetails from '../models/ReportsDetails';
+import JDBC_Connections from '../models/JDBC_Connections';
 
 let getReports = (input) => {
     return new Promise(async (resolve, reject) => {
@@ -262,6 +263,63 @@ let bulkCreateReportDetails = (arrayReportDetails) => {
     })
 }
 
+let getAllJDBCConnections = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allJDBCsConnections = await JDBC_Connections.findAll();
+
+            resolve({
+                code: 0,
+                status: 'Ok',
+                message: 'Get report details oke',
+                data: allJDBCsConnections
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let createJDBCConnections = (infoJDBC_Connections) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const newJDBCConnections = await JDBC_Connections.create(infoJDBC_Connections);
+            resolve({
+                code: 0,
+                status: 'Ok',
+                message: 'Create report details oke',
+                data: newJDBCConnections
+            })
+        } catch (e) {
+            reject({
+                code: -1,
+                message: e.message
+            })
+        }
+    })
+}
+
+let bulkCreateJDBCConnections = (arrInfoJDBC_Connections) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const newArrInfoJDBC_Connections = await JDBC_Connections.bulkCreate(arrInfoJDBC_Connections);
+            resolve({
+                code: 0,
+                status: 'Ok',
+                message: 'Bulk Create JDBCs Connections oke',
+                data: newArrInfoJDBC_Connections
+            })
+        } catch (e) {
+            reject({
+                errCode: -1,
+                message: e.message
+            })
+        }
+    })
+}
+
+
+
 export const serviceReport = {
     getReports,
     getReport,
@@ -273,5 +331,9 @@ export const serviceReport = {
     getReportDetails,
     createReportDetails,
     getDetailBy_report_id,
-    bulkCreateReportDetails
+    bulkCreateReportDetails,
+
+    getAllJDBCConnections,
+    createJDBCConnections,
+    bulkCreateJDBCConnections
 }
