@@ -232,6 +232,25 @@ const bulkCreateReportDetails = (async (req, res) => {
     }
 })
 
+const getJDBCConnections = (async (req, res) => {
+    try {
+        let { id } = req.params
+        // const input = { keySearch }
+        if (!id) {
+            return res.status(200).json({
+                errCode: -1,
+                message: 'Missing input'
+            })
+        }
+        let response = await serviceReport.getJDBCConnections(id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error.message
+        })
+    }
+})
+
 const getAllJDBCConnections = (async (req, res) => {
     try {
         // let { keySearch = '' } = req.query
@@ -248,8 +267,8 @@ const getAllJDBCConnections = (async (req, res) => {
 
 const createJDBCConnections = (async (req, res) => {
     try {
-        const { host, username, password } = req.body
-        if (!host || !username || !password) {
+        const { host, user, password } = req.body
+        if (!host || !user || !password) {
             return res.status(200).json({
                 message: "Missing input"
             })
@@ -301,7 +320,7 @@ export const controllerReport = {
     getDetailBy_report_id,
     bulkCreateReportDetails,
 
-
+    getJDBCConnections,
     getAllJDBCConnections,
     createJDBCConnections,
     bulkCreateJDBCConnections

@@ -3,11 +3,11 @@ import mysql from 'mysql2/promise';
 
 const testConnection = async (req, res) => {
     try {
-        const { host, username, password } = req.query;
-        if (host && username && password) {
+        const { host, user, password } = req.query;
+        if (host && user && password) {
             const config = {
                 host: host,
-                user: username,
+                user: user,
                 password: password
             };
 
@@ -47,8 +47,8 @@ const testConnection = async (req, res) => {
 
 const createConnection = async (req, res) => {
     try {
-        const { host, username, password } = req.query;
-        if (!host || !username || !password) {
+        const { host, user, password } = req.query;
+        if (!host || !user || !password) {
             return res.status(200).json({
                 errCode: -1,
                 message: 'Missing input'
@@ -57,7 +57,7 @@ const createConnection = async (req, res) => {
 
         const configDB = {
             host: host,
-            user: username,
+            user: user,
             password: password
         };
 
@@ -73,31 +73,32 @@ const createConnection = async (req, res) => {
 
 const getAllNameDB = (async (req, res) => {
     try {
-        let response = await serviceDB.getAllNameDB()
+        const { infoJDBC } = req.body
+        // console.log(infoConfig);
+        let response = await serviceDB.getAllNameDB(infoJDBC)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(200).json({
-            message: error
+            errCode: -1,
+            message: error.message
         })
     }
 })
 
 const getAllNameTBOfDB = (async (req, res) => {
     try {
-        // console.log();
-        const { nameDB } = req.query
-        console.log("nameDB: ", nameDB);
-        if (!nameDB) {
-            return res.status(400).json({
+        const { nameDB, infoJDBC } = req.body
+        if (!nameDB || !infoJDBC) {
+            return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getAllNameTBOfDB(req.query)
+        let response = await serviceDB.getAllNameTBOfDB(nameDB, infoJDBC)
         return res.status(200).json(response)
     } catch (error) {
-        return res.status(404).json({
-            message: error
+        return res.status(200).json({
+            message: error.message
         })
     }
 })
@@ -160,39 +161,40 @@ const getColumnsINT = (async (req, res) => {
 
 const getCountRecords = (async (req, res) => {
     try {
-        const { nameDB, nameTB } = req.query
-        if (!nameDB || !nameTB) {
+        const { nameDB, nameTB, infoJDBC } = req.body
+        if (!nameDB || !nameTB || !infoJDBC) {
             return res.status(400).json({
                 code: -1,
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getCountRecords(req.query)
+        let response = await serviceDB.getCountRecords(nameDB, nameTB, infoJDBC)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
-            message: error
+            message: error.message
         })
     }
 })
 
 const getTable = (async (req, res) => {
     try {
-        const { nameDB, nameTB } = req.query
+        const { nameDB, nameTB, infoJDBC, filter } = req.body
+        console.log(nameDB, nameTB, infoJDBC, filter);
         // console.log(req.query);
-        if (!nameDB || !nameTB) {
+        if (!nameDB || !nameTB || !infoJDBC) {
             return res.status(400).json({
-                code: -1,
+                code: -2,
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        let response = await serviceDB.getTable(req.query)
+        let response = await serviceDB.getTable(nameDB, nameTB, infoJDBC, filter)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
-            message: error
+            message: error.message
         })
     }
 })
@@ -220,16 +222,105 @@ const groupByColumn = (async (req, res) => {
 
 const autoCompareTable = (async (req, res) => {
     try {
-        const { schemaSource, schemaSink, tableSource, tableSink } = req.query
-        if (!schemaSource || !schemaSink || !tableSource || !tableSink) {
+        const {
+            infoJDBCSource, schemaSource, tableSource,
+            infoJDBCSink, schemaSink, tableSink
+        } = req.body
+
+        const infoSource = { infoJDBCSource, schemaSource, tableSource }
+        const infoSink = { infoJDBCSink, schemaSink, tableSink }
+
+        if (!infoJDBCSource || !schemaSource || !tableSource ||
+            !infoJDBCSink || !schemaSink || !tableSink) {
             return res.status(400).json({
                 code: -1,
-                status: 'ERR',
-                message: 'The input is required'
+                message: 'Missing input'
             })
         }
 
-        let response = await serviceDB.autoCompareTable(req.query)
+        let response = await serviceDB.autoCompareTable(infoSource, infoSink)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const compareDescribe = (async (req, res) => {
+    try {
+        const {
+            infoJDBCSource, schemaSource, tableSource,
+            infoJDBCSink, schemaSink, tableSink
+        } = req.body
+
+        const infoSource = { infoJDBCSource, schemaSource, tableSource }
+        const infoSink = { infoJDBCSink, schemaSink, tableSink }
+
+        if (!infoJDBCSource || !schemaSource || !tableSource ||
+            !infoJDBCSink || !schemaSink || !tableSink) {
+            return res.status(400).json({
+                code: -1,
+                message: 'Missing input'
+            })
+        }
+
+        let response = await serviceDB.compareDescribe(infoSource, infoSink)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const compareCountRecords = (async (req, res) => {
+    try {
+        const {
+            infoJDBCSource, schemaSource, tableSource,
+            infoJDBCSink, schemaSink, tableSink
+        } = req.body
+
+        const infoSource = { infoJDBCSource, schemaSource, tableSource }
+        const infoSink = { infoJDBCSink, schemaSink, tableSink }
+
+        if (!infoJDBCSource || !schemaSource || !tableSource ||
+            !infoJDBCSink || !schemaSink || !tableSink) {
+            return res.status(400).json({
+                code: -1,
+                message: 'Missing input'
+            })
+        }
+
+        let response = await serviceDB.compareCountRecords(infoSource, infoSink)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(404).json({
+            message: error
+        })
+    }
+})
+
+const compareGroupRecords = (async (req, res) => {
+    
+    try {
+        const {
+            infoJDBCSource, schemaSource, tableSource,
+            infoJDBCSink, schemaSink, tableSink
+        } = req.body
+
+        const infoSource = { infoJDBCSource, schemaSource, tableSource }
+        const infoSink = { infoJDBCSink, schemaSink, tableSink }
+
+        if (!infoJDBCSource || !schemaSource || !tableSource ||
+            !infoJDBCSink || !schemaSink || !tableSink) {
+            return res.status(400).json({
+                code: -1,
+                message: 'Missing input'
+            })
+        }
+
+        let response = await serviceDB.compareGroupRecords(infoSource, infoSink)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(404).json({
@@ -241,9 +332,9 @@ const autoCompareTable = (async (req, res) => {
 
 const countRecordTablesSchema = (async (req, res) => {
     try {
-        const { nameDB } = req.query
+        const { nameDB, infoJDBC } = req.body
         // console.log(req.query);
-        if (!nameDB) {
+        if (!nameDB || !infoJDBC) {
             return res.status(400).json({
                 code: -1,
                 status: 'ERR',
@@ -251,14 +342,16 @@ const countRecordTablesSchema = (async (req, res) => {
             })
         }
 
-        let response = await serviceDB.countRecordTablesSchema(req.query)
+        let response = await serviceDB.countRecordTablesSchema(nameDB, infoJDBC)
         return res.status(200).json(response)
     } catch (error) {
-        return res.status(404).json({
-            message: error
+        return res.status(400).json({
+            errCode: -1,
+            message: error.message
         })
     }
 })
+
 
 
 
@@ -274,7 +367,13 @@ export const controllerDB = {
     getTable,
     groupByColumn,
 
+    // compare
     autoCompareTable,
+    compareDescribe,
+    compareCountRecords,
+    compareGroupRecords,
+
+
     testConnection,
     createConnection,
     countRecordTablesSchema

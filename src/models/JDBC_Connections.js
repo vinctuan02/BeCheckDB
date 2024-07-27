@@ -1,4 +1,4 @@
-import DataTypes from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/Database';
 
 const JDBC_Connections = sequelize.define('JDBC_Connections', {
@@ -11,22 +11,6 @@ const JDBC_Connections = sequelize.define('JDBC_Connections', {
         type: DataTypes.STRING,
         allowNull: true, // Cho phép giá trị null
     },
-    jdbc_url: {
-        type: DataTypes.STRING(1024),
-        allowNull: true, // Cho phép giá trị null
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-    },
     type_database: {
         type: DataTypes.STRING(50),
         allowNull: true, // Cho phép giá trị null
@@ -34,6 +18,22 @@ const JDBC_Connections = sequelize.define('JDBC_Connections', {
     host: {
         type: DataTypes.STRING(50),
         allowNull: true, // Cho phép giá trị null
+    },
+    user: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    jdbc_url: {
+        type: DataTypes.STRING(1024),
+        allowNull: true, // Cho phép giá trị null
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
     }
 }, {
     tableName: 'JDBC_Connections',

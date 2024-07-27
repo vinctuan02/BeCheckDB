@@ -11,11 +11,12 @@ let getReports = (input) => {
                 where: {
                     reportName: {
                         [Op.like]: `%${keySearch}%`
-                    },
-                    // fileName: {
-                    //     [Op.like]: `%${keySearch}%`
-                    // },
-                }
+                    }
+                },
+                order: [
+                    ['create_date', 'ASC'],
+                    ['update_date', 'ASC'] 
+                ]
             });
 
             resolve({
@@ -263,6 +264,25 @@ let bulkCreateReportDetails = (arrayReportDetails) => {
     })
 }
 
+let getJDBCConnections = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allJDBCsConnections = await JDBC_Connections.findOne({
+                where: { id: id }
+            });
+
+            resolve({
+                code: 0,
+                status: 'Ok',
+                message: 'Get info jdbc oke',
+                data: allJDBCsConnections
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 let getAllJDBCConnections = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -271,7 +291,7 @@ let getAllJDBCConnections = () => {
             resolve({
                 code: 0,
                 status: 'Ok',
-                message: 'Get report details oke',
+                message: 'Get all info jdbc oke',
                 data: allJDBCsConnections
             })
         } catch (e) {
@@ -333,6 +353,7 @@ export const serviceReport = {
     getDetailBy_report_id,
     bulkCreateReportDetails,
 
+    getJDBCConnections,
     getAllJDBCConnections,
     createJDBCConnections,
     bulkCreateJDBCConnections
